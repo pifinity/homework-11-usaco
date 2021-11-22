@@ -1,0 +1,43 @@
+import java.io.*;
+import java.util.*;
+
+public class YearOfTheCow {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st =new StringTokenizer(bf.readLine());
+
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
+
+        TreeSet<Integer> cycles = new TreeSet<>();
+        
+        for (int i=0; i<N; i++){
+            cycles.add(Integer.parseInt(bf.readLine())/12+1);
+        }
+
+        int total = cycles.last()*12;
+        int cur = 0;
+        PriorityQueue<Integer> q=new PriorityQueue<>(Collections.reverseOrder());
+
+        for (int i : cycles){
+            q.add(i-cur-1);
+            cur = i;
+        }
+
+        for (int i=1; i<K; i++){
+            total-= 12 * q.poll();
+        }
+
+
+
+
+
+        System.out.println(total);
+
+
+
+
+
+
+    }
+}
