@@ -1,0 +1,65 @@
+import java.io.*;
+import java.util.*;
+
+public class LifeGuards {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bf = new BufferedReader(new FileReader("lifeguards.in"));
+        PrintWriter out = new PrintWriter("lifeguards.out");
+
+        int n = Integer.parseInt(bf.readLine());
+        pair[] pairs = new pair[2*n];
+
+        for (int i=0; i<n; i++){
+            StringTokenizer st = new StringTokenizer(bf.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b= Integer.parseInt(st.nextToken());
+            pairs[2*i] = new pair(i, a);
+            pairs[2*i+1] = new pair(i, b);
+        }
+
+        Arrays.sort(pairs,  Comparator.comparingInt(j -> j.time));
+        TreeSet<Integer> hashSet = new TreeSet<Integer>();
+
+        int[] minShift = new int[n];
+        long totalTime = 0L;
+        long lastTime = 0L;
+
+        for (pair i: pairs){
+            if (hashSet.size()==1) {
+                minShift[hashSet.first()] +=  i.time - lastTime;
+            }
+            if (hashSet.size()>0){
+                totalTime +=i.time-lastTime;
+            }
+
+            if (!hashSet.contains(i.id)){
+                hashSet.add(i.id);
+            }else{
+                hashSet.remove(i.id);
+            }
+
+            lastTime = i.time;
+        }
+
+        long soloShift = 0;
+
+        for (int out1 : minShift){
+            soloShift = Math.max(soloShift, totalTime-out1);
+        }
+
+        out.println(soloShift);
+        out.close();
+
+
+
+    }
+
+    static class pair{
+        int id, time;
+
+        public pair(int id, int time){
+            this.id = id;
+            this.time = time;
+        }
+    }
+}
